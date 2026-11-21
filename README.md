@@ -1,4 +1,4 @@
-# MASJID360
+# IMARIX
 
 Pengurusan kewangan masjid dan surau mengikut Garis Panduan Pengurusan Kewangan MAIS. Oleh **Fathi Global**.
 
@@ -13,7 +13,7 @@ Fasa 1, langkah 1 (asas): log masuk, akaun berasingan untuk setiap masjid (multi
 2. Buka **SQL Editor**, salin seluruh kandungan `supabase/migrations/20261121000001_foundation.sql`, dan jalankan.
    (Atau dengan Supabase CLI: `supabase link --project-ref <ref>` kemudian `supabase db push`.)
 3. **Authentication → URL Configuration:**
-   - Site URL: URL aplikasi anda (cth. `https://app.masjid360.my`, atau `http://localhost:3000` semasa pembangunan)
+   - Site URL: URL aplikasi anda (cth. `https://app.imarix.my`, atau `http://localhost:3000` semasa pembangunan)
    - Redirect URLs: tambah `<Site URL>/auth/callback`
 4. **Authentication → Providers → Email:** biarkan "Confirm email" aktif.
 

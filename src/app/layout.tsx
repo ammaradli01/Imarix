@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "MASJID360 — Pengurusan Masjid",
+  title: "IMARIX — Pengurusan Masjid",
   description: "Pengurusan kewangan masjid dan surau mengikut Garis Panduan MAIS. Oleh Fathi Global.",
 };
 

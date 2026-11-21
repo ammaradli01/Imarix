@@ -10,7 +10,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   return (
     <main className="auth-wrap">
       <div className="auth-card card">
-        <div className="flex items-center gap-3 mb-6"><Logo /><div><b className="text-lg">MASJID360</b><div className="text-sm" style={{ color: "var(--mute)" }}>Pengurusan Kewangan Masjid</div></div></div>
+        <div className="flex items-center gap-3 mb-6"><Logo /><div><b className="text-lg">IMARIX</b><div className="text-sm" style={{ color: "var(--mute)" }}>Pengurusan Kewangan Masjid</div></div></div>
         <h1 className="page">Assalamualaikum</h1>
         <p className="sub">Log masuk ke akaun masjid atau surau anda.</p>
         <Flash {...m} />

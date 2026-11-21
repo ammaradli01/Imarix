@@ -27,7 +27,7 @@ export default async function Jemputan({ params, searchParams }:
   return (
     <main className="auth-wrap">
       <div className="auth-card card">
-        <div className="flex items-center gap-3 mb-6"><Logo /><b className="text-lg">MASJID360</b></div>
+        <div className="flex items-center gap-3 mb-6"><Logo /><b className="text-lg">IMARIX</b></div>
         {!inv ? <><h1 className="page">Jemputan tidak sah</h1><p className="sub">Pautan ini tidak wujud. Minta pentadbir masjid menghantar jemputan baharu.</p></> : (
           <>
             <h1 className="page">Anda dijemput</h1>

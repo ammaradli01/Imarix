@@ -20,7 +20,7 @@ export default async function OrgLayout({ children, params }: { children: React.
       <header className="topbar">
         <Link href={`/o/${slug}`} className="flex items-center gap-2.5 no-underline" style={{ color: "var(--ink)" }}>
           <Logo />
-          <span className="leading-tight"><b className="block">{org.name}</b><small style={{ color: "var(--mute)" }}>MASJID360</small></span>
+          <span className="leading-tight"><b className="block">{org.name}</b><small style={{ color: "var(--mute)" }}>IMARIX</small></span>
         </Link>
         <OrgNav slug={slug} items={items} />
         <details className="relative">

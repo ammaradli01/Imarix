@@ -1,4 +1,4 @@
--- MASJID360 — Fasa 1: Asas (tenant, pengguna, peranan, jemputan, log audit)
+-- IMARIX — Fasa 1: Asas (tenant, pengguna, peranan, jemputan, log audit)
 -- Semua jadual milik tenant membawa organization_id dan dilindungi Row Level Security.
 
 create extension if not exists pgcrypto;

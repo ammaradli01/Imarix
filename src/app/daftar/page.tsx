@@ -10,7 +10,7 @@ export default async function DaftarPage({ searchParams }: { searchParams: Promi
   return (
     <main className="auth-wrap">
       <div className="auth-card card">
-        <div className="flex items-center gap-3 mb-6"><Logo /><b className="text-lg">MASJID360</b></div>
+        <div className="flex items-center gap-3 mb-6"><Logo /><b className="text-lg">IMARIX</b></div>
         <h1 className="page">Daftar akaun</h1>
         <p className="sub">Untuk Nazir, Bendahari, Setiausaha atau AJK. Selepas mendaftar, anda boleh mendaftarkan masjid atau menerima jemputan.</p>
         <Flash {...m} />

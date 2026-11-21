@@ -17,7 +17,7 @@ export function NameSlugFields() {
       <label className="field">Alamat ringkas sistem
         <input className="input" name="slug" required pattern="[a-z0-9][a-z0-9-]{1,48}[a-z0-9]" value={slug}
           onChange={(e) => { setTouched(true); setSlug(slugify(e.target.value)); }} />
-        <small>masjid360.my/o/{slug || "nama-masjid"} — huruf kecil, nombor dan sengkang sahaja</small>
+        <small>imarix.my/o/{slug || "nama-masjid"} — huruf kecil, nombor dan sengkang sahaja</small>
       </label>
     </>
   );

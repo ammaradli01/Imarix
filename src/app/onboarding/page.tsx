@@ -13,7 +13,7 @@ export default async function Onboarding({ searchParams }: { searchParams: Promi
   return (
     <main className="auth-wrap">
       <div className="card" style={{ width: "min(640px,100%)" }}>
-        <div className="flex items-center gap-3 mb-6"><Logo /><b className="text-lg">MASJID360</b></div>
+        <div className="flex items-center gap-3 mb-6"><Logo /><b className="text-lg">IMARIX</b></div>
         <p className="text-xs font-extrabold tracking-[3px]" style={{ color: "var(--pri)" }}>LANGKAH 1 DARIPADA 5</p>
         <h1 className="page">Daftar masjid anda</h1>
         <p className="sub">Anda akan menjadi pentadbir akaun ini. Maklumat lain boleh dilengkapkan kemudian dalam Profil Masjid.</p>

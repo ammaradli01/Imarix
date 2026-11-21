@@ -28,7 +28,7 @@ export default async function Akaun({ searchParams }: { searchParams: Promise<Re
   return (
     <main className="auth-wrap">
       <div className="auth-card card">
-        <div className="flex items-center gap-3 mb-6"><Logo /><b className="text-lg">MASJID360</b></div>
+        <div className="flex items-center gap-3 mb-6"><Logo /><b className="text-lg">IMARIX</b></div>
         <h1 className="page">Akaun saya</h1>
         <p className="sub">{user!.email}</p>
         <Flash {...m} />
