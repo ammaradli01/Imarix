@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MASJID360
 
-## Getting Started
+Pengurusan kewangan masjid dan surau mengikut Garis Panduan Pengurusan Kewangan MAIS. Oleh **Fathi Global**.
 
-First, run the development server:
+Fasa 1, langkah 1 (asas): log masuk, akaun berasingan untuk setiap masjid (multi-tenant), peranan, jemputan pengguna, profil masjid boleh diedit, akaun bank dan log audit.
 
+**Teknologi:** Next.js 15 (App Router) · Supabase (PostgreSQL, Auth, Row Level Security) · Tailwind CSS 4 · Zod
+
+## Mula
+
+### 1. Cipta projek Supabase
+1. Daftar di [supabase.com](https://supabase.com) dan cipta projek baharu. Pilih rantau **Southeast Asia (Singapore)**.
+2. Buka **SQL Editor**, salin seluruh kandungan `supabase/migrations/20261121000001_foundation.sql`, dan jalankan.
+   (Atau dengan Supabase CLI: `supabase link --project-ref <ref>` kemudian `supabase db push`.)
+3. **Authentication → URL Configuration:**
+   - Site URL: URL aplikasi anda (cth. `https://app.masjid360.my`, atau `http://localhost:3000` semasa pembangunan)
+   - Redirect URLs: tambah `<Site URL>/auth/callback`
+4. **Authentication → Providers → Email:** biarkan "Confirm email" aktif.
+
+### 2. Jalankan aplikasi
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # isi URL dan anon key daripada Supabase > Project Settings > API
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Cuba aliran utama
+1. `/daftar` → cipta akaun → sahkan emel → log masuk.
+2. `/onboarding` → daftar masjid (anda menjadi Pentadbir + jawatan yang dipilih).
+3. **Profil Masjid** → lengkapkan alamat, poskod, telefon dan tambah akaun bank.
+4. **Pengguna** → cipta jemputan untuk Nazir/Bendahari/Pemeriksa → salin pautan → hantar melalui WhatsApp.
+5. **Log Audit** → lihat siapa mengubah apa.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Ujian
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Ujian pangkalan data (33 ujian: pengasingan tenant, peranan, jemputan, log audit) dijalankan pada PostgreSQL 16 tempatan:
+```bash
+npm run test:db          # perlukan PostgreSQL 16 (initdb, pg_ctl, psql); jangan jalankan sebagai root
+```
+Fail `supabase/tests/00_auth_stub.sql` meniru skema `auth` Supabase untuk ujian sahaja. Ia **tidak** dijalankan di Supabase.
 
-## Learn More
+## Struktur
+```
+supabase/migrations/     Skema, fungsi, polisi RLS (sumber kebenaran untuk kebenaran)
+supabase/tests/          Ujian RLS dan penjalan ujian
+src/lib/supabase/        Klien Supabase (server, middleware)
+src/lib/roles.ts         Label peranan dan pembantu kebenaran UI
+src/lib/org.ts           Konteks organisasi (org + peranan pengguna)
+src/app/                 Halaman: login, daftar, onboarding, jemputan, akaun, o/[slug]/(utama|profil|pengguna|audit)
+docs/                    Status pelaksanaan dan isu diketahui
+```
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Prinsip keselamatan
+- **Kebenaran dikuatkuasakan di pangkalan data** melalui RLS; butang yang disembunyikan di UI hanyalah kemudahan.
+- Setiap jadual milik tenant mempunyai `organization_id` yang dikunci selepas dicipta.
+- Pengguna baharu masuk ke organisasi **hanya melalui jemputan** yang sepadan dengan emel log masuk.
+- Pengguna tidak boleh mengubah peranan sendiri; sekurang-kurangnya seorang Pentadbir mesti kekal.
+- Log audit ditulis oleh pencetus pangkalan data, tidak boleh diubah atau dipadam; nombor akaun bank disorok (`****1234`).
+- Akaun bank hanya kelihatan kepada Pentadbir, Nazir, Bendahari dan Pemeriksa.
