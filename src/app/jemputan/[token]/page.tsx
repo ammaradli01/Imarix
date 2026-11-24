@@ -19,7 +19,7 @@ async function accept(fd: FormData) {
 export default async function Jemputan({ params, searchParams }:
   { params: Promise<{ token: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
   const { token } = await params; const m = msg(await searchParams);
-  if (!/^[0-9a-f-]{36}$/i.test(token)) redirect("/");
+  if (!/^[0-9a-f-]{36}$/i.test(token)) redirect("/app");
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   const { data } = await supabase.rpc("invitation_preview", { p_token: token });
@@ -42,7 +42,7 @@ export default async function Jemputan({ params, searchParams }:
               )}
           </>
         )}
-        <p className="text-sm mt-5"><Link href="/" style={{ color: "var(--pri)" }} className="font-bold">Kembali</Link></p>
+        <p className="text-sm mt-5"><Link href="/app" style={{ color: "var(--pri)" }} className="font-bold">Kembali</Link></p>
       </div>
     </main>
   );

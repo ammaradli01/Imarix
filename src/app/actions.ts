@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 const site = () => process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const safeNext = (n: FormDataEntryValue | null) => {
   const s = typeof n === "string" ? n : "";
-  return s.startsWith("/") && !s.startsWith("//") ? s : "/";
+  return s.startsWith("/") && !s.startsWith("//") ? s : "/app";
 };
 
 export async function signIn(fd: FormData) {

@@ -110,6 +110,37 @@ set role anon;
 select pg_temp.fails($$select count(*) from public.organizations$$, 'Peranan anon tiada akses ke jadual');
 reset role;
 
+-- LANGGANAN
+select pg_temp.ok((select count(*) from public.subscriptions)=2, 'Setiap organisasi baharu mendapat langganan');
+select pg_temp.ok((select app.subscription_state(:'org_a'))='percubaan', 'Organisasi baharu dalam tempoh percubaan');
+select pg_temp.ok((select trial_ends_at::date from public.subscriptions where organization_id=:'org_a')=(now()+interval '30 days')::date, 'Percubaan 30 hari');
+set role authenticated;
+select pg_temp.login('00000000-0000-0000-0000-00000000000d','ajk@a.my');
+select pg_temp.ok((select count(*) from public.subscriptions)=1, 'AJK boleh melihat status langganan masjidnya');
+select pg_temp.ok((select count(*) from public.subscription_invoices)=0, 'AJK tidak boleh melihat invois');
+select pg_temp.fails($$select public.request_subscription_invoice('$$||:'org_a'||$$','bulanan')$$, 'AJK tidak boleh meminta invois');
+select pg_temp.login('00000000-0000-0000-0000-00000000000c','zainal@b.my');
+select pg_temp.fails($$select public.request_subscription_invoice('$$||:'org_a'||$$','bulanan')$$, 'Admin B tidak boleh meminta invois untuk Masjid A');
+select pg_temp.ok((select count(*) from public.subscriptions where organization_id=:'org_a')=0, 'Admin B tidak nampak langganan Masjid A');
+select pg_temp.login('00000000-0000-0000-0000-00000000000a','ahmad@a.my');
+select public.request_subscription_invoice(:'org_a','tahunan') as inv1 \gset
+select pg_temp.ok((select amount_sen from public.subscription_invoices where id=:'inv1')=100000, 'Harga tahunan RM1,000 ditetapkan pelayan');
+select pg_temp.ok((select public.request_subscription_invoice(:'org_a','tahunan'))=:'inv1', 'Invois menunggu yang sama digunakan semula');
+select public.request_subscription_invoice(:'org_a','bulanan') as inv2 \gset
+select pg_temp.ok((select amount_sen from public.subscription_invoices where id=:'inv2')=9000, 'Harga bulanan RM90');
+select pg_temp.ok((select status from public.subscription_invoices where id=:'inv1')='dibatalkan', 'Invois lama dibatalkan apabila kitaran ditukar');
+select pg_temp.fails($$update public.subscription_invoices set status='dibayar'$$, 'Bendahari tidak boleh menanda invois dibayar sendiri');
+select pg_temp.fails($$update public.subscriptions set status='aktif', current_period_end=now()+interval '9 years'$$, 'Langganan tidak boleh diubah terus oleh pengguna');
+select pg_temp.fails($$select public.mark_invoice_paid('$$||:'inv2'||$$','toyyibpay','X1')$$, 'Pengguna tidak boleh memanggil fungsi pengesahan bayaran');
+reset role;
+select public.mark_invoice_paid(:'inv2','toyyibpay','BILL-001');
+select public.mark_invoice_paid(:'inv2','toyyibpay','BILL-001');
+select pg_temp.ok((select app.subscription_state(:'org_a'))='aktif', 'Bayaran disahkan mengaktifkan langganan');
+select pg_temp.ok((select current_period_end::date from public.subscriptions where organization_id=:'org_a')=(now()+interval '1 month')::date, 'Webhook berulang tidak melanjutkan tempoh dua kali');
+select pg_temp.ok((select count(*) from public.audit_logs where entity='subscription_invoices')>=3, 'Perubahan invois direkod dalam log audit');
+update public.subscriptions set trial_ends_at=now()-interval '1 day' where organization_id=:'org_b';
+select pg_temp.ok((select app.subscription_state(:'org_b'))='tamat', 'Percubaan yang luput menjadi tamat');
+
 -- Keputusan
 \o
 select n, case when ok then 'LULUS' else 'GAGAL' end as keputusan, name from _r order by n;

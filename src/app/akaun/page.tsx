@@ -37,7 +37,7 @@ export default async function Akaun({ searchParams }: { searchParams: Promise<Re
           <label className="field">No. telefon<input className="input" name="phone" type="tel" defaultValue={p?.phone ?? ""} /></label>
           <SubmitButton>Simpan</SubmitButton>
         </form>
-        <p className="text-sm mt-5"><Link href="/" className="font-bold" style={{ color: "var(--pri)" }}>← Kembali</Link></p>
+        <p className="text-sm mt-5"><Link href="/app" className="font-bold" style={{ color: "var(--pri)" }}>← Kembali</Link></p>
       </div>
     </main>
   );

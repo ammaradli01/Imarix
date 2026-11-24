@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "IMARIX — Pengurusan Masjid",
-  description: "Pengurusan kewangan masjid dan surau mengikut Garis Panduan MAIS. Oleh Fathi Global.",
+  description: "Pengurusan kewangan masjid dan surau mengikut Garis Panduan Pengurusan Kewangan Masjid dan Surau Negeri Selangor 2023. Oleh Fathi Global.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

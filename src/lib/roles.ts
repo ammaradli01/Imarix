@@ -38,6 +38,7 @@ export const can = {
   manageBank: (r: Role[]) => has(r, ["org_admin", "treasurer"]),
   deleteBank: (r: Role[]) => has(r, ["org_admin"]),
   viewAudit: (r: Role[]) => has(r, ["org_admin", "chairman", "auditor"]),
+  manageBilling: (r: Role[]) => has(r, ["org_admin", "chairman", "treasurer"]),
 };
 
 export function slugify(s: string) {

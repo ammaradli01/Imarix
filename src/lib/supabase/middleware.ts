@@ -1,7 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_PATHS = ["/login", "/daftar", "/auth", "/lupa-kata-laluan"];
+const PUBLIC_PATHS = ["/login", "/daftar", "/auth", "/lupa-kata-laluan", "/harga", "/privasi", "/terma", "/landing", "/brand"];
+/** Laman utama awam: padanan tepat sahaja, supaya "/" tidak membuka semua laluan. */
+const PUBLIC_EXACT = ["/"];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -22,13 +24,13 @@ export async function updateSession(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
   const path = request.nextUrl.pathname;
-  const isPublic = PUBLIC_PATHS.some((p) => path === p || path.startsWith(p + "/"));
+  const isPublic = PUBLIC_EXACT.includes(path) || PUBLIC_PATHS.some((p) => path === p || path.startsWith(p + "/"));
 
   if (!user && !isPublic) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.search = "";
-    if (path !== "/") url.searchParams.set("next", path);
+    url.searchParams.set("next", path + request.nextUrl.search);
     return NextResponse.redirect(url);
   }
   return response;
