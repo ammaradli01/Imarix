@@ -14,7 +14,7 @@ export default async function OrgLayout({ children, params }: { children: React.
   const orgs = await myOrgs();
   const items = [
     { href: "", label: "Utama" },
-    { href: "profil", label: "Profil Masjid" },
+    { href: "profil", label: "Profil" },
     { href: "pengguna", label: "Pengguna" },
     ...(can.viewAudit(roles) ? [{ href: "audit", label: "Log Audit" }] : []),
     { href: "langganan", label: "Langganan" },
