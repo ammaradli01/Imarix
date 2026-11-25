@@ -43,3 +43,23 @@ export async function signOut() {
   await supabase.auth.signOut();
   redirect("/login");
 }
+
+/** Hantar pautan tetapan semula kata laluan. Mesej sama walaupun emel tiada, supaya emel pengguna tidak boleh diteka. */
+export async function requestPasswordReset(fd: FormData) {
+  const email = z.string().email().safeParse(fd.get("email"));
+  if (!email.success) redirect(`/lupa-kata-laluan?err=${encodeURIComponent("Sila masukkan emel yang sah.")}`);
+  const supabase = await createClient();
+  await supabase.auth.resetPasswordForEmail(email.data!, { redirectTo: `${site()}/auth/callback?next=/kata-laluan-baru` });
+  redirect(`/lupa-kata-laluan?ok=${encodeURIComponent("Jika emel ini berdaftar, pautan untuk menetapkan kata laluan baharu telah dihantar. Semak juga folder Spam.")}`);
+}
+
+export async function setNewPassword(fd: FormData) {
+  const p = z.object({ password: z.string().min(10, "Kata laluan sekurang-kurangnya 10 aksara"), confirm: z.string() })
+    .refine((v) => v.password === v.confirm, { message: "Kedua-dua kata laluan tidak sama." })
+    .safeParse({ password: fd.get("password"), confirm: fd.get("confirm") });
+  if (!p.success) redirect(`/kata-laluan-baru?err=${encodeURIComponent(p.error.issues[0].message)}`);
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ password: p.data!.password });
+  if (error) redirect(`/kata-laluan-baru?err=${encodeURIComponent(error.message.includes("different") ? "Kata laluan baharu mesti berbeza daripada yang lama." : "Pautan telah tamat. Sila minta pautan baharu.")}`);
+  redirect(`/app?ok=${encodeURIComponent("Kata laluan baharu disimpan.")}`);
+}
