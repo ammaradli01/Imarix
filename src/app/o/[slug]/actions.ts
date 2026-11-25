@@ -1,6 +1,7 @@
 "use server";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 const key = (orgId: string) => `imx_skip_setup_${orgId.replace(/[^a-f0-9]/g, "").slice(0, 32)}`;
 
@@ -8,11 +9,13 @@ const key = (orgId: string) => `imx_skip_setup_${orgId.replace(/[^a-f0-9]/g, "")
 export async function skipSetup(slug: string, orgId: string) {
   (await cookies()).set(key(orgId), "1", { maxAge: 60 * 60 * 24 * 30, path: "/", sameSite: "lax", httpOnly: true, secure: true });
   revalidatePath(`/o/${slug}`);
+  redirect(`/o/${slug}`);
 }
 
 export async function showSetup(slug: string, orgId: string) {
   (await cookies()).delete(key(orgId));
   revalidatePath(`/o/${slug}`);
+  redirect(`/o/${slug}`);
 }
 
 export async function isSetupSkipped(orgId: string) {
