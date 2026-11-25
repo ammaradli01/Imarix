@@ -141,6 +141,25 @@ select pg_temp.ok((select count(*) from public.audit_logs where entity='subscrip
 update public.subscriptions set trial_ends_at=now()-interval '1 day' where organization_id=:'org_b';
 select pg_temp.ok((select app.subscription_state(:'org_b'))='tamat', 'Percubaan yang luput menjadi tamat');
 
+-- PENTADBIR PLATFORM
+insert into app.platform_admins(user_id) values ('00000000-0000-0000-0000-00000000000e');
+select public.request_subscription_invoice(:'org_a','tahunan') as inv3 \gset
+set role authenticated;
+select pg_temp.login('00000000-0000-0000-0000-00000000000a','ahmad@a.my');
+select pg_temp.fails($$select * from public.admin_invoices()$$, 'Pentadbir masjid tidak boleh membuka panel platform');
+select pg_temp.fails($$select public.admin_mark_invoice_paid('$$||:'inv3'||$$','X')$$, 'Pentadbir masjid tidak boleh menanda invois dibayar');
+select pg_temp.ok(not public.am_i_platform_admin(), 'Pengguna biasa bukan pentadbir platform');
+select pg_temp.login('00000000-0000-0000-0000-00000000000e','orangluar@x.my');
+select pg_temp.ok(public.am_i_platform_admin(), 'Pentadbir platform dikenali');
+select pg_temp.ok((select count(*) from public.admin_organizations())=2, 'Pentadbir platform nampak semua masjid');
+select pg_temp.ok((select count(*) from public.admin_invoices() where status='menunggu')>=1, 'Pentadbir platform nampak invois menunggu');
+select pg_temp.ok((select count(*) from public.organizations)=0, 'Pentadbir platform tidak dapat akses terus jadual masjid');
+select pg_temp.fails($$select public.admin_mark_invoice_paid('$$||:'inv3'||$$','  ')$$, 'Rujukan bayaran wajib');
+select public.admin_mark_invoice_paid(:'inv3','MBB-778899');
+select pg_temp.ok((select status from public.admin_invoices() where id=:'inv3')='dibayar', 'Pentadbir platform menanda invois dibayar');
+reset role;
+select pg_temp.ok((select actor_id from public.audit_logs where entity='subscription_invoices' and entity_id=:'inv3' and action='UPDATE' order by created_at desc limit 1)='00000000-0000-0000-0000-00000000000e', 'Tindakan pentadbir platform direkod dalam log audit');
+
 -- Keputusan
 \o
 select n, case when ok then 'LULUS' else 'GAGAL' end as keputusan, name from _r order by n;

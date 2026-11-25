@@ -32,7 +32,7 @@ export default async function Invois({ params }: { params: Promise<{ slug: strin
     <>
       <div className="no-print flex flex-wrap items-center justify-between gap-3 mb-4">
         <Link href={`/o/${slug}/langganan`} className="text-sm font-bold" style={{ color: "var(--pri)" }}>← Langganan</Link>
-        <PrintButton />
+        <div className="flex gap-2"><a className="btn btn-pri btn-sm" href={`/o/${slug}/langganan/invois/${id}/pdf`}>Muat turun PDF</a><PrintButton /></div>
       </div>
       <article className="inv">
         <header className="inv-head">
