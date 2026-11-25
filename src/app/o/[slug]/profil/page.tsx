@@ -46,7 +46,7 @@ export default async function Profil({ params, searchParams }:
             <label className="field">Tahun kewangan bermula
               <select className="input" name="fiscal_year_start" defaultValue={org.fiscal_year_start} disabled={!edit}>
                 {BULAN.map((b, i) => <option key={b} value={i + 1}>{b}</option>)}
-              </select><small>Garis Panduan MAIS: 1 Januari – 31 Disember</small>
+              </select><small>Ikut garis panduan: 1 Januari – 31 Disember</small>
             </label>
           </div>
           {edit && <div><SubmitButton>Simpan profil</SubmitButton></div>}

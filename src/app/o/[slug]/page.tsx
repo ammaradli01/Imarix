@@ -49,7 +49,7 @@ export default async function OrgHome({ params, searchParams }:
         </section>
         <section className="card">
           <h2 className="card-title">Modul seterusnya</h2>
-          <p className="text-sm" style={{ color: "var(--mute)" }}>Modul kewangan (kutipan Jumaat, resit, baucer, buku tunai, penyata bank AI dan laporan JAIS) sedang dipindahkan daripada prototaip ke sistem ini dalam langkah seterusnya Fasa 1.</p>
+          <p className="text-sm" style={{ color: "var(--mute)" }}>Modul kewangan (kutipan Jumaat, resit, baucer, buku tunai, penyata bank AI dan laporan ke pejabat agama) sedang dipindahkan daripada prototaip ke sistem ini dalam langkah seterusnya Fasa 1.</p>
           <ul className="mt-3 grid gap-2 text-sm">
             {["Kutipan Jumaat (BR-KMS 003)", "Resit rasmi (BR-KMS 005)", "Baucar bayaran (BR-KMS 007)", "Buku Tunai (BR-KMS 002)", "Penyata bank dengan AI", "Laporan BR-KMS 018, 019, 020"].map((x) => <li key={x}><span className="badge badge-n">Akan datang</span> {x}</li>)}
           </ul>

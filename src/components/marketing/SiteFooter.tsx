@@ -13,7 +13,7 @@ export function SiteFooter() {
         <div><b>Akaun</b><Link href="/daftar">Daftar percuma</Link><Link href="/login">Log masuk</Link></div>
         <div><b>Syarikat</b><span>Fathi Global</span><Link href="/privasi">Notis privasi</Link><Link href="/terma">Terma perkhidmatan</Link></div>
       </div>
-      <div className="mk-wrap mk-copy">© {new Date().getFullYear()} Fathi Global. IMARIX ialah produk Fathi Global. Bukan produk rasmi JAIS atau MAIS.</div>
+      <div className="mk-wrap mk-copy">© {new Date().getFullYear()} Fathi Global. IMARIX ialah produk Fathi Global. Bukan produk rasmi mana-mana pejabat agama.</div>
     </footer>
   );
 }

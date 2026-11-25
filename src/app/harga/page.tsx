@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const BANDING = [
   ["Kutipan Jumaat, resit dan baucar", "✓"], ["Buku Tunai dan penyesuaian bank", "✓"], ["Laporan BR-KMS 018, 019, 020", "✓"],
-  ["Minit mesyuarat", "✓"], ["Skor Pematuhan JAIS 2023", "✓"], ["Imbas invois dengan AI", "✓"],
+  ["Minit mesyuarat", "✓"], ["Skor Pematuhan garis panduan", "✓"], ["Imbas invois dengan AI", "✓"],
   ["Bilangan pengguna AJK", "Tiada had"], ["Log audit", "✓"], ["Khairat kematian", "Akan datang"],
 ];
 const SOALAN = [

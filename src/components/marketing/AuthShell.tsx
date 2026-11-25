@@ -14,7 +14,7 @@ export function AuthShell({ children, mode }: { children: React.ReactNode; mode:
         <div>
           <h2>{mode === "daftar" ? <>Mula percuma {TRIAL_DAYS} hari. <em>Tanpa kad kredit.</em></> : <>Kewangan masjid, <em>sentiasa sedia diaudit.</em></>}</h2>
           <ul className="mk-ticks au-ticks">
-            <li>Borang Garis Panduan JAIS 2023 dijana sendiri</li>
+            <li>Borang garis panduan pejabat agama dijana sendiri</li>
             <li>Kelulusan bayaran ikut had kuasa</li>
             <li>Data setiap masjid diasingkan dan dilog</li>
           </ul>

@@ -11,7 +11,7 @@ export const FEATURES = [
   "Penyata bank: AI kategorikan dan padankan transaksi",
   "Laporan BR-KMS 018, 019 dan 020 dalam satu klik",
   "Minit mesyuarat (BR-KMS 010)",
-  "Skor Pematuhan Garis Panduan JAIS 2023",
+  "Skor Pematuhan mengikut garis panduan pejabat agama",
   "Jemput Nazir, Bendahari, Setiausaha, AJK dan Pemeriksa Kira-kira",
   "Log audit setiap perubahan",
   "Sokongan melalui WhatsApp",

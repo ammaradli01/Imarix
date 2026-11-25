@@ -7,13 +7,13 @@ import { PricePlan } from "@/components/marketing/PricePlan";
 import { TRIAL_DAYS, PRICE, rm, waLink } from "@/lib/pricing";
 
 export const metadata: Metadata = {
-  title: "IMARIX — Sistem Kewangan Masjid & Surau ikut Garis Panduan JAIS 2023",
+  title: "IMARIX — Sistem Kewangan Masjid & Surau ikut Garis Panduan Pejabat Agama",
   description: "Rekod kutipan Jumaat, resit, baucar dan minit mesyuarat. IMARIX menjana laporan borang BR-KMS dan menyemak pematuhan sebelum audit. Percuma 30 hari.",
 };
 
 const FOKUS = [
   { t: "Kewangan harian", d: "Kutipan tabung Jumaat, resit rasmi, baucar bayaran dan Buku Tunai yang dikemas kini sendiri.", tag: "BR-KMS 002 · 003 · 005 · 007" },
-  { t: "Laporan ke JAIS", d: "Laporan bulanan dan berkala, Penyata Kewangan Tahunan dan penyesuaian bank dalam format asal.", tag: "BR-KMS 018 · 019 · 020" },
+  { t: "Laporan ke pejabat agama", d: "Laporan bulanan dan berkala, Penyata Kewangan Tahunan dan penyesuaian bank dalam format asal.", tag: "BR-KMS 018 · 019 · 020" },
   { t: "Minit mesyuarat", d: "Rekod kehadiran dan keputusan; laporan kewangan diisi terus daripada buku tunai.", tag: "BR-KMS 010" },
   { t: "Khairat kematian", d: "Ahli, yuran, tuntutan dan bantuan kematian dalam satu tempat.", tag: "Akan datang", soon: true },
 ];
@@ -25,7 +25,7 @@ const CIRI = [
 ];
 
 const SOALAN = [
-  ["Adakah laporan IMARIX ikut format JAIS?", "Ya. Borang dijana mengikut lampiran Garis Panduan Pengurusan Kewangan, Perolehan dan Aset Masjid dan Surau Negeri Selangor 2023 (BR-KMS). IMARIX ialah produk Fathi Global dan bukan produk rasmi JAIS."],
+  ["Adakah laporan IMARIX ikut format pejabat agama?", "Ya. Borang dijana mengikut lampiran Garis Panduan Pengurusan Kewangan, Perolehan dan Aset Masjid dan Surau Negeri Selangor 2023 (BR-KMS). IMARIX ialah produk Fathi Global dan bukan produk rasmi mana-mana pejabat agama."],
   ["Perlu pasang aplikasi?", "Tidak. IMARIX dibuka melalui pelayar web di telefon, tablet atau komputer."],
   ["Siapa yang boleh menggunakan akaun masjid?", "Pentadbir menjemput Nazir, Bendahari, Setiausaha, AJK dan Pemeriksa Kira-kira. Setiap orang hanya nampak apa yang dibenarkan oleh peranannya."],
   ["Adakah data masjid selamat?", "Data setiap masjid diasingkan di peringkat pangkalan data, setiap perubahan direkod dalam log audit, dan nombor akaun bank disorok dalam log."],
@@ -42,9 +42,9 @@ export default function Landing() {
       <section className="mk-hero mk-wrap">
         <div className="mk-hero-txt">
           <span className="mk-eyebrow">Untuk masjid & surau di Selangor</span>
-          <h1>Kewangan masjid tersusun, <em>laporan JAIS sedia</em> bila diminta.</h1>
-          <p className="mk-lead">Rekod kutipan Jumaat, resit, baucar dan minit mesyuarat di telefon. IMARIX menjana borang Garis Panduan JAIS 2023 dan menyemak pematuhan sebelum audit.</p>
-          <div className="mk-badges"><span>✓ Ikut Garis Panduan JAIS 2023</span><span>✓ Percuma {TRIAL_DAYS} hari</span><span>✓ Tanpa kad kredit</span></div>
+          <h1>Kewangan masjid tersusun, <em>laporan pejabat agama sedia</em> bila diminta.</h1>
+          <p className="mk-lead">Rekod kutipan Jumaat, resit, baucar dan minit mesyuarat di telefon. IMARIX menjana borang mengikut garis panduan pejabat agama dan menyemak pematuhan sebelum audit.</p>
+          <div className="mk-badges"><span>✓ Ikut garis panduan pejabat agama</span><span>✓ Percuma {TRIAL_DAYS} hari</span><span>✓ Tanpa kad kredit</span></div>
           <div className="mk-actions">
             <Link className="btn btn-pri mk-big" href="/daftar">Cuba percuma {TRIAL_DAYS} hari</Link>
             <Link className="btn mk-big" href="/harga">Lihat harga</Link>
