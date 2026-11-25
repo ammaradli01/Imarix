@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getOrgContext, msg } from "@/lib/org";
 import { ROLE_LABEL, can } from "@/lib/roles";
 import { Flash } from "@/components/Flash";
+import { skipSetup, showSetup, isSetupSkipped } from "./actions";
 
 export default async function OrgHome({ params, searchParams }:
   { params: Promise<{ slug: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
@@ -21,6 +22,7 @@ export default async function OrgHome({ params, searchParams }:
     { done: have.has("auditor"), t: "Jemput Pemeriksa Kira-kira", d: "Untuk menyemak penyata 6 bulanan", href: "pengguna" },
   ];
   const doneN = steps.filter((s) => s.done).length;
+  const skipped = doneN < steps.length && (await isSetupSkipped(org.id));
   return (
     <>
       <Flash {...m} />
@@ -28,16 +30,22 @@ export default async function OrgHome({ params, searchParams }:
         <div>
           <p className="text-xs font-extrabold tracking-[3px] mb-2" style={{ color: "var(--pri)" }}>{org.name.toUpperCase()}</p>
           <h1 className="page" style={{ fontSize: "clamp(32px,4.4vw,50px)" }}>Assalamualaikum, <em>{(profile?.full_name || "").split(" bin ")[0] || "tuan/puan"}</em></h1>
-          <p className="sub">Anda log masuk sebagai {roles.map((r) => ROLE_LABEL[r]).join(", ")}. {doneN < steps.length ? `${steps.length - doneN} langkah lagi untuk menyiapkan akaun masjid.` : "Akaun masjid sudah lengkap."}</p>
+          <p className="sub">Anda log masuk sebagai {roles.map((r) => ROLE_LABEL[r]).join(", ")}. {skipped ? "" : doneN < steps.length ? `${steps.length - doneN} langkah lagi untuk menyiapkan akaun masjid.` : "Akaun masjid sudah lengkap."}</p>
+          {skipped && (
+            <form action={showSetup.bind(null, slug, org.id)} className="text-sm" style={{ color: "var(--mute)" }}>
+              Persediaan akaun disembunyikan ({doneN}/{steps.length} selesai). <button type="submit" className="font-bold" style={{ color: "var(--pri)", background: "none", border: 0, padding: 0, cursor: "pointer", font: "inherit" }}>Tunjuk semula</button>
+            </form>
+          )}
         </div>
-        <div className="card text-center">
+        {!skipped && <div className="card text-center">
           <div className="serif" style={{ fontSize: 56, color: "var(--pri)", lineHeight: 1 }}>{doneN}/{steps.length}</div>
           <div className="text-sm mt-1" style={{ color: "var(--mute)" }}>langkah persediaan selesai · {members ?? 0} peranan aktif</div>
-        </div>
+        </div>}
       </section>
       <div className="grid gap-4 md:grid-cols-2">
-        <section className="card">
-          <h2 className="card-title">Persediaan akaun</h2>
+        {!skipped && <section className="card">
+          <div className="flex items-center justify-between gap-2 mb-3"><h2 className="card-title" style={{ margin: 0 }}>Persediaan akaun</h2>
+            {doneN < steps.length && <form action={skipSetup.bind(null, slug, org.id)}><button type="submit" className="btn btn-sm">Langkau dahulu</button></form>}</div>
           <div className="grid gap-2.5">
             {steps.map((s, i) => (
               <Link key={i} href={`/o/${slug}${s.href ? "/" + s.href : ""}`} className="check">
@@ -46,7 +54,7 @@ export default async function OrgHome({ params, searchParams }:
               </Link>
             ))}
           </div>
-        </section>
+        </section>}
         <section className="card">
           <h2 className="card-title">Modul seterusnya</h2>
           <p className="text-sm" style={{ color: "var(--mute)" }}>Modul kewangan (kutipan Jumaat, resit, baucer, buku tunai, penyata bank AI dan laporan ke pejabat agama) sedang dipindahkan daripada prototaip ke sistem ini dalam langkah seterusnya Fasa 1.</p>
