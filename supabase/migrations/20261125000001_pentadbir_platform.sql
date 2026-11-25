@@ -7,6 +7,7 @@ create table app.platform_admins (
   user_id    uuid primary key references auth.users(id) on delete cascade,
   created_at timestamptz not null default now()
 );
+alter table app.platform_admins enable row level security; -- tiada polisi: hanya fungsi SECURITY DEFINER boleh membaca
 comment on table app.platform_admins is 'Pentadbir platform IMARIX. Ditambah secara manual melalui SQL sahaja.';
 
 create or replace function app.is_platform_admin()
