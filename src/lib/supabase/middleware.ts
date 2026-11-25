@@ -31,9 +31,11 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  let user = null;
+  let user: string | null = null;
   try {
-    ({ data: { user } } = await supabase.auth.getUser());
+    // getClaims mengesahkan token secara setempat (tiada panggilan rangkaian setiap halaman)
+    const { data } = await supabase.auth.getClaims();
+    user = (data?.claims?.sub as string | undefined) ?? null;
   } catch (e) {
     console.error("IMARIX: gagal menyemak sesi", e);
   }

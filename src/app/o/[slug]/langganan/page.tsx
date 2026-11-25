@@ -4,6 +4,8 @@ import { Flash } from "@/components/Flash";
 import { SubmitButton } from "@/components/SubmitButton";
 import { getSubscription, tarikh } from "@/lib/subscription";
 import { PRICE, YEARLY_SAVING, FEATURES, rm, waLink } from "@/lib/pricing";
+import Link from "next/link";
+import { BILLER, hasBank } from "@/lib/billing";
 import { requestInvoice } from "./actions";
 
 const STATUS: Record<string, [string, string]> = {
@@ -65,9 +67,10 @@ export default async function Langganan({ params, searchParams }:
 
           {pending && (
             <section className="card mb-5 sub-pay" id="bayar">
-              <h2 className="card-title">Cara membayar invois {pending.invoice_no}</h2>
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-2"><h2 className="card-title" style={{ margin: 0 }}>Cara membayar invois {pending.invoice_no}</h2>
+                <Link className="btn btn-pri btn-sm" href={`/o/${slug}/langganan/invois/${pending.id}`}>Lihat / cetak invois</Link></div>
               <ol className="text-sm grid gap-2" style={{ paddingLeft: 18, listStyle: "decimal" }}>
-                <li>Pindahkan <b>{rm(pending.amount_sen / 100)}</b> ke akaun Fathi Global. Butiran akaun akan dihantar bersama invois.</li>
+                <li>Pindahkan <b>{rm(pending.amount_sen / 100)}</b> ke {hasBank() ? <><b>{BILLER.bank} {BILLER.account}</b> ({BILLER.accountName})</> : "akaun Fathi Global (butiran akan dimaklumkan)"}.</li>
                 <li>Tulis nombor invois <b>{pending.invoice_no}</b> sebagai rujukan pindahan.</li>
                 <li>Hantar bukti pindahan kepada kami. Langganan diaktifkan selepas bayaran disahkan diterima di bank.</li>
               </ol>
@@ -79,11 +82,12 @@ export default async function Langganan({ params, searchParams }:
           <section className="card" id="invois">
             <h2 className="card-title">Invois</h2>
             {invoices.length ? (
-              <div className="overflow-x-auto"><table className="t"><thead><tr><th>No. invois</th><th>Tarikh</th><th>Pelan</th><th style={{ textAlign: "right" }}>Jumlah</th><th>Status</th></tr></thead>
+              <div className="overflow-x-auto"><table className="t"><thead><tr><th>No. invois</th><th>Tarikh</th><th>Pelan</th><th style={{ textAlign: "right" }}>Jumlah</th><th>Status</th><th></th></tr></thead>
                 <tbody>{invoices.map((i) => (
                   <tr key={i.id}><td><b>{i.invoice_no}</b></td><td>{tarikh(i.created_at)}</td><td>{i.billing_cycle === "bulanan" ? "Bulanan" : "Tahunan"}</td>
                     <td style={{ textAlign: "right" }}>{rm(i.amount_sen / 100)}</td>
-                    <td><span className={`badge${i.status === "menunggu" ? " badge-m" : i.status === "dibayar" ? "" : " badge-n"}`}>{INV[i.status]}</span></td></tr>
+                    <td><span className={`badge${i.status === "menunggu" ? " badge-m" : i.status === "dibayar" ? "" : " badge-n"}`}>{INV[i.status]}</span></td>
+                    <td>{i.status !== "dibatalkan" && <Link className="btn btn-sm" href={`/o/${slug}/langganan/invois/${i.id}`}>Lihat invois</Link>}</td></tr>
                 ))}</tbody></table></div>
             ) : <p className="text-sm" style={{ color: "var(--mute)" }}>Belum ada invois. Pilih pelan di atas untuk mengeluarkan invois.</p>}
           </section>

@@ -6,8 +6,8 @@ export async function SiteHeader() {
   let loggedIn = false;
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    loggedIn = !!user;
+    const { data } = await supabase.auth.getClaims();
+    loggedIn = !!data?.claims?.sub;
   } catch { loggedIn = false; }
   const links = [["/#ciri", "Ciri"], ["/#cara-mula", "Cara mula"], ["/harga", "Harga"], ["/#soalan", "Soalan lazim"]];
   return (

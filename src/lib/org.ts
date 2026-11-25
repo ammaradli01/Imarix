@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Role } from "@/lib/roles";
@@ -11,21 +12,29 @@ export type Org = {
 
 /** Muat organisasi melalui slug dan peranan pengguna semasa.
  *  RLS memastikan organisasi hanya kelihatan kepada ahlinya; selain itu 404. */
-export async function getOrgContext(slug: string) {
+export const getOrgContext = cache(async (slug: string) => {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await currentUser(supabase);
   if (!user) redirect(`/login?next=/o/${slug}`);
 
   const { data: org } = await supabase.from("organizations").select("*").eq("slug", slug).maybeSingle<Org>();
   if (!org) notFound();
 
-  const { data: rows } = await supabase.from("memberships").select("role")
-    .eq("organization_id", org.id).eq("user_id", user.id).eq("status", "active");
+  // Dua pertanyaan serentak untuk menjimatkan masa
+  const [{ data: rows }, { data: profile }] = await Promise.all([
+    supabase.from("memberships").select("role").eq("organization_id", org.id).eq("user_id", user.id).eq("status", "active"),
+    supabase.from("profiles").select("full_name, phone").eq("id", user.id).maybeSingle(),
+  ]);
   const roles = (rows ?? []).map((r) => r.role as Role);
   if (roles.length === 0) notFound();
-
-  const { data: profile } = await supabase.from("profiles").select("full_name, phone").eq("id", user.id).maybeSingle();
   return { supabase, user, org, roles, profile };
+});
+
+/** Pengguna semasa daripada token yang disahkan secara setempat (lebih pantas daripada getUser). */
+export async function currentUser(supabase: Awaited<ReturnType<typeof createClient>>) {
+  const { data, error } = await supabase.auth.getClaims();
+  if (error || !data?.claims?.sub) return null;
+  return { id: data.claims.sub as string, email: (data.claims.email as string | undefined) ?? "" };
 }
 
 /** Senarai organisasi yang pengguna sertai (untuk penukar organisasi). */
