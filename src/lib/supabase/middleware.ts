@@ -7,9 +7,18 @@ const PUBLIC_EXACT = ["/"];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
+  const path = request.nextUrl.pathname;
+  const isPublic = PUBLIC_EXACT.includes(path) || PUBLIC_PATHS.some((p) => path === p || path.startsWith(p + "/"));
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) {
+    // Tetapan hilang: jangan jatuhkan seluruh laman. Laman awam masih dipaparkan; halaman akaun disekat.
+    console.error("IMARIX: NEXT_PUBLIC_SUPABASE_URL atau NEXT_PUBLIC_SUPABASE_ANON_KEY tidak ditetapkan");
+    return isPublic ? response : new NextResponse("Sistem sedang diselenggara. Sila cuba sebentar lagi.", { status: 503 });
+  }
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    url,
+    key,
     {
       cookies: {
         getAll: () => request.cookies.getAll(),
@@ -22,16 +31,19 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
-  const path = request.nextUrl.pathname;
-  const isPublic = PUBLIC_EXACT.includes(path) || PUBLIC_PATHS.some((p) => path === p || path.startsWith(p + "/"));
+  let user = null;
+  try {
+    ({ data: { user } } = await supabase.auth.getUser());
+  } catch (e) {
+    console.error("IMARIX: gagal menyemak sesi", e);
+  }
 
   if (!user && !isPublic) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    url.search = "";
-    url.searchParams.set("next", path + request.nextUrl.search);
-    return NextResponse.redirect(url);
+    const to = request.nextUrl.clone();
+    to.pathname = "/login";
+    to.search = "";
+    to.searchParams.set("next", path + request.nextUrl.search);
+    return NextResponse.redirect(to);
   }
   return response;
 }
